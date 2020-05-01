@@ -43,6 +43,7 @@ export default function EditProfile({ match }) {
     const [values, setValues] = useState({
         name: '',
         password: '',
+        about: '',
         email: '',
         open: false,
         error: '',
@@ -81,6 +82,7 @@ export default function EditProfile({ match }) {
     const clickSubmit = () => {
         const user = {
             name: values.name || undefined,
+            about: values.about || undefined,
             email: values.email || undefined,
             password: values.password || undefined
         };
@@ -127,6 +129,14 @@ export default function EditProfile({ match }) {
                     value={values.name}
                     onChange={handleChange('name')}
                     margin="normal"
+                /><br/>
+                <TextField
+                    id="multiline-flexible"
+                    label="About"
+                    multiline
+                    rows="2"
+                    value={values.about}
+                    onChange={handleChange('about')}
                 /><br/>
                 <TextField
                     id="email"
