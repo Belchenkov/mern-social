@@ -35,6 +35,17 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: 'auto',
         marginBottom: theme.spacing(2)
+    },
+    bigAvatar: {
+        width: 60,
+        height: 60,
+        margin: 'auto'
+    },
+    input: {
+        display: 'none'
+    },
+    filename:{
+        marginLeft:'10px'
     }
 }));
 
@@ -45,6 +56,7 @@ export default function EditProfile({ match }) {
         password: '',
         about: '',
         email: '',
+        photo: '',
         open: false,
         error: '',
         redirectToProfile: false
@@ -122,6 +134,22 @@ export default function EditProfile({ match }) {
                 <Typography variant="h6" className={classes.title}>
                     Edit Profile
                 </Typography>
+                <input
+                    accept="image/*"
+                    onChange={handleChange('photo')}
+                    className={classes.input}
+                    style={{display:'none'}}
+                    id="icon-button-file"
+                    type="file"
+                />
+                <label htmlFor="icon-button-file">
+                    <Button variant="contained" color="default" component="span">
+                        Upload {/*<FileUpload />*/}
+                    </Button>
+                </label>
+                <span className={classes.filename}>
+                    {values.photo ? values.photo.name : ''}
+                </span><br/>
                 <TextField
                     id="name"
                     label="Name"
@@ -137,6 +165,8 @@ export default function EditProfile({ match }) {
                     rows="2"
                     value={values.about}
                     onChange={handleChange('about')}
+                    className={classes.textField}
+                    margin="normal"
                 /><br/>
                 <TextField
                     id="email"
