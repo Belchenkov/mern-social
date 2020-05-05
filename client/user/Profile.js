@@ -27,17 +27,31 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(5)
     }),
     title: {
-        marginTop: theme.spacing(3),
-        color: theme.palette.protectedTitle
+        margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0`,
+        color: theme.palette.protectedTitle,
+        fontSize: '1em'
+    },
+    bigAvatar: {
+        width: 60,
+        height: 60,
+        margin: 10
     }
-}));
-
+}))
 
 export default function Profile({ match }) {
     const classes = useStyles();
+    const [values, setValues] = useState({
+        user: {following:[], followers:[]},
+        redirectToSignin: false,
+        following: false
+    });
     const [user, setUser] = useState({});
     const [redirectToSignin, setRedirectToSignin] = useState(false);
     const jwt = auth.isAuthenticated();
+
+    const photoUrl = values.user._id
+        ? `/api/users/photo/${values.user._id}?${new Date().getTime()}`
+        : '/api/users/defaultphoto';
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -72,15 +86,9 @@ export default function Profile({ match }) {
             <List dense>
                 <ListItem>
                     <ListItemAvatar>
-                        <Avatar>
-                            <Person/>
-                        </Avatar>
+                        <Avatar src={photoUrl} className={classes.bigAvatar}/>
                     </ListItemAvatar>
-                    <ListItemText
-                        primary={user.name}
-                        secondary={user.email}
-                        primary={user.about}
-                    />
+                    <ListItemText primary={values.user.name} secondary={values.user.email}/>
                     {
                         auth.isAuthenticated().user && auth.isAuthenticated().user._id == user._id &&
                             (<ListItemSecondaryAction>
