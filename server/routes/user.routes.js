@@ -19,6 +19,11 @@ router.route('/api/users/:userId')
     .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
     .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove);
 
+router.route('/api/users/follow')
+    .put(authCtrl.requireSignin, userCtrl.addFollowing, userCtrl.addFollower);
+router.route('/api/users/unfollow')
+    .put(authCtrl.requireSignin, userCtrl.removeFollowing, userCtrl.removeFollower)
+
 router.param('userId', userCtrl.userByID);
 
 export default router;
