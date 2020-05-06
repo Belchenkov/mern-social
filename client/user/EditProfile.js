@@ -35,6 +35,17 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: 'auto',
         marginBottom: theme.spacing(2)
+    },
+    bigAvatar: {
+        width: 60,
+        height: 60,
+        margin: 'auto'
+    },
+    input: {
+        display: 'none'
+    },
+    filename:{
+        marginLeft:'10px'
     }
 }));
 
@@ -43,7 +54,9 @@ export default function EditProfile({ match }) {
     const [values, setValues] = useState({
         name: '',
         password: '',
+        about: '',
         email: '',
+        photo: '',
         open: false,
         error: '',
         redirectToProfile: false
@@ -79,17 +92,19 @@ export default function EditProfile({ match }) {
     }, [match.params.userId])
 
     const clickSubmit = () => {
-        const user = {
-            name: values.name || undefined,
-            email: values.email || undefined,
-            password: values.password || undefined
-        };
+        let userData = new FormData();
+
+        values.name && userData.append('name', values.name);
+        values.email && userData.append('email', values.email);
+        values.password && userData.append('password', values.password);
+        values.about && userData.append('about', values.about);
+        values.photo && userData.append('photo', values.photo);
 
         update({
             userId: match.params.userId
         }, {
             t: jwt.token
-        }, user)
+        }, userData)
             .then(data => {
                 if (data && data.error) {
                     setValues({...values, error: data.error});
@@ -104,9 +119,13 @@ export default function EditProfile({ match }) {
     }
 
     const handleChange = name => event => {
+        const value = name === 'photo'
+            ? event.target.files[0]
+            : event.target.value;
+
         setValues({
             ...values,
-            [name]: event.target.value
+            [name]: value
         });
     };
 
@@ -120,12 +139,38 @@ export default function EditProfile({ match }) {
                 <Typography variant="h6" className={classes.title}>
                     Edit Profile
                 </Typography>
+                <input
+                    accept="image/*"
+                    onChange={handleChange('photo')}
+                    className={classes.input}
+                    style={{display:'none'}}
+                    id="icon-button-file"
+                    type="file"
+                />
+                <label htmlFor="icon-button-file">
+                    <Button variant="contained" color="default" component="span">
+                        Upload {/*<FileUpload />*/}
+                    </Button>
+                </label>
+                <span className={classes.filename}>
+                    {values.photo ? values.photo.name : ''}
+                </span><br/>
                 <TextField
                     id="name"
                     label="Name"
                     className={classes.textField}
                     value={values.name}
                     onChange={handleChange('name')}
+                    margin="normal"
+                /><br/>
+                <TextField
+                    id="multiline-flexible"
+                    label="About"
+                    multiline
+                    rows="2"
+                    value={values.about}
+                    onChange={handleChange('about')}
+                    className={classes.textField}
                     margin="normal"
                 /><br/>
                 <TextField
