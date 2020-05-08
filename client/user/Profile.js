@@ -16,8 +16,9 @@ import Divider from '@material-ui/core/Divider';
 
 import DeleteUser from './DeleteUser';
 import auth from './../auth/auth-helper';
-import {read} from './api-user.js';
+import { read } from './api-user.js';
 import FollowProfileButton from "./FollowProfileButton";
+import ProfileTabs from "./ProfileTabs";
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({
@@ -140,6 +141,7 @@ export default function Profile({ match }) {
                     />
                 </ListItem>
             </List>
+            <ProfileTabs user={values.user} />
         </Paper>
     )
 }
