@@ -94,7 +94,11 @@ export default function Profile({ match }) {
             if (data.error) {
                 setValues({...values, error: data.error});
             } else {
-                setValues({...values, user: data, following: !values.following});
+                setValues({
+                    ...values,
+                    user: data,
+                    following: !values.following
+                });
             }
         });
     }

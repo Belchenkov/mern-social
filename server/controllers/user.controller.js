@@ -51,6 +51,7 @@ const userByID = async (req, res, next, id) => {
         req.profile = user;
         next();
     } catch (err) {
+        console.log(err);
         return res.status('400').json({
             error: "Could not retrieve user"
         });
@@ -133,7 +134,7 @@ const defaultPhoto = (req, res) => {
 }
 
 const addFollowing = async (req, res, next) => {
-    try{
+    try {
         await User.findByIdAndUpdate(
             req.body.userId,
             {$push: {following: req.body.followId}}
@@ -196,6 +197,23 @@ const removeFollower = async (req, res) => {
     }
 };
 
+const findPeople = async (req, res) => {
+    let following = req.profile.following;
+    following.push(req.profile._id);
+
+    try {
+        let users = await User
+            .find({ _id: { $nin : following }})
+            .select('name');
+        console.log(users);
+        res.json(users);
+    } catch(err){
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
+        })
+    }
+};
+
 export default {
     create,
     userByID,
@@ -208,5 +226,6 @@ export default {
     addFollowing,
     addFollower,
     removeFollowing,
-    removeFollower
+    removeFollower,
+    findPeople
 };
