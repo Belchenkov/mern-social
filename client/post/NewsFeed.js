@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import auth from './../auth/auth-helper';
 
 import PostList from './PostList';
-//import {listNewsFeed} from './api-post.js'
+import { listNewsFeed } from '../auth/api-post';
 //import NewPost from './NewPost'
 
 const useStyles = makeStyles(theme => ({
@@ -30,6 +30,27 @@ export default function NewsFeed () {
     const classes = useStyles();
     const [posts, setPosts] = useState([]);
     const jwt = auth.isAuthenticated();
+
+    useEffect(() => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+
+        listNewsFeed(
+            { userId: jwt.user._id },
+            { t: jwt.token },
+            signal
+        ).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                setPosts(data);
+            }
+        });
+
+        return function cleanup(){
+            abortController.abort();
+        }
+    }, [])
 
     const addPost = post => {
         const updatedPosts = [...posts];

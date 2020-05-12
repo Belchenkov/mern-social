@@ -24,4 +24,9 @@ const listNewsFeed = async (req, res) => {
             error: errorHandler.getErrorMessage(err)
         });
     }
+};
+
+
+export default {
+    listNewsFeed,
 }

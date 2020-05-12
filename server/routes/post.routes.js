@@ -11,3 +11,5 @@ router.route('/api/posts/feed/:userId')
 
 
 router.param('userId', userCtrl.userByID);
+
+export default router;
