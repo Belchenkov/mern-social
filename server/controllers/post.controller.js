@@ -35,7 +35,6 @@ const listByUser = async (req, res) => {
             .populate('postedBy', '_id name')
             .sort('-created')
             .exec();
-
         res.json(posts);
     } catch(err) {
         return res.status(400).json({
