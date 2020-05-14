@@ -73,8 +73,35 @@ const create = (req, res, next) => {
     })
 };
 
+const photo = (req, res, next) => {
+    res.set("Content-Type", req.post.photo.contentType);
+
+    return res.send(req.post.photo.data);
+};
+
+const postByID = async (req, res, next, id) => {
+    try{
+        const post = await Post.findById(id)
+            .populate('postedBy', '_id name')
+            .exec();
+
+        if (!post)
+            return res.status('400').json({
+                error: "Post not found"
+            });
+
+        req.post = post;
+        next();
+    } catch(err){
+        return res.status('400').json({
+            error: "Could not retrieve use post"
+        });
+    }
+};
+
 export default {
     listNewsFeed,
     listByUser,
-    create
+    create,
+    postByID
 }
