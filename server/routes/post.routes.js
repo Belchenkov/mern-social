@@ -10,6 +10,8 @@ router.route('/api/posts/feed/:userId')
     .get(authCtrl.requireSignin, postCtrl.listNewsFeed);
 router.route('/api/posts/by/:userId')
     .get(authCtrl.requireSignin, postCtrl.listByUser)
+router.route('/api/posts/new/:userId')
+    .post(authCtrl.requireSignin, postCtrl.create)
 
 router.param('userId', userCtrl.userByID);
 
