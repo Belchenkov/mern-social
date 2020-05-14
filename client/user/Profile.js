@@ -20,7 +20,7 @@ import ProfileTabs from "./ProfileTabs";
 
 import auth from './../auth/auth-helper';
 import { read } from './api-user.js';
-import { listByUser } from "../auth/api-post";
+import { listByUser } from "../post/api-post";
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({

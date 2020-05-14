@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import auth from './../auth/auth-helper';
 
 import PostList from './PostList';
-import { listNewsFeed } from '../auth/api-post';
+import { listNewsFeed } from './api-post';
 //import NewPost from './NewPost'
 
 const useStyles = makeStyles(theme => ({
