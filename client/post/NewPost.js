@@ -9,11 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Icon from '@material-ui/core/Icon';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
-import { makeStyles } from '@material-ui/core/styles'
-import { create } from './api-post.js'
+import { create } from './api-post.js';
 import auth from './../auth/auth-helper';
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +71,7 @@ export default function NewPost ({ addUpdate }){
         setValues({
             ...values,
             user: auth.isAuthenticated().user
-        })
+        });
     }, [])
 
     const clickPost = () => {
@@ -87,9 +87,80 @@ export default function NewPost ({ addUpdate }){
             if (data.error) {
                 setValues({...values, error: data.error});
             } else {
-                setValues({...values, text: '', photo: ''});
+                setValues({...values, text:'', photo: ''});
                 addUpdate(data);
             }
-        })
+        });
+    };
+
+    const handleChange = name => event => {
+        const value = name === 'photo'
+            ? event.target.files[0]
+            : event.target.value;
+
+        setValues({...values, [name]: value });
     }
+    const photoURL = values.user._id ? `/api/users/photo/${values.user._id}` : '/api/users/defaultphoto';
+
+    return (
+        <div className={classes.root}>
+            <Card className={classes.card}>
+                <CardHeader
+                    avatar={<Avatar src={photoURL}/>}
+                    title={values.user.name}
+                    className={classes.cardHeader}
+                />
+                <CardContent className={classes.cardContent}>
+                    <TextField
+                        placeholder="Share your thoughts ..."
+                        multiline
+                        rows="3"
+                        value={values.text}
+                        onChange={handleChange('text')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <input
+                        accept="image/*"
+                        onChange={handleChange('photo')}
+                        className={classes.input}
+                        id="icon-button-file"
+                        type="file"
+                    />
+                    <label htmlFor="icon-button-file">
+                        <IconButton
+                            color="secondary"
+                            className={classes.photoButton}
+                            component="span"
+                        >
+                            <PhotoCamera />
+                        </IconButton>
+                    </label>
+                    <span className={classes.filename}>
+                        {values.photo ? values.photo.name : ''}
+                    </span>
+                    { values.error && (
+                        <Typography component="p" color="error">
+                            <Icon color="error" className={classes.error}>error</Icon>
+                            {values.error}
+                        </Typography>)
+                    }
+                </CardContent>
+                <CardActions>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        disabled={values.text === ''}
+                        onClick={clickPost}
+                        className={classes.submit}
+                    >POST</Button>
+                </CardActions>
+            </Card>
+        </div>
+    )
 }
+
+NewPost.propTypes = {
+    addUpdate: PropTypes.func.isRequired
+}
+

@@ -103,5 +103,6 @@ export default {
     listNewsFeed,
     listByUser,
     create,
+    photo,
     postByID
 }

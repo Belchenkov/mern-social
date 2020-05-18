@@ -1,9 +1,9 @@
 import express from 'express';
 
-const router = express.Router();
-
 import userCtrl from '../controllers/user.controller';
 import authCtrl from '../controllers/auth.controller';
+
+const router = express.Router();
 
 router.route('/api/users')
     .get(userCtrl.list)
