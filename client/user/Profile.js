@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,10 +15,12 @@ import Edit from '@material-ui/icons/Edit';
 import Divider from '@material-ui/core/Divider';
 
 import DeleteUser from './DeleteUser';
-import auth from './../auth/auth-helper';
-import { read } from './api-user.js';
 import FollowProfileButton from "./FollowProfileButton";
 import ProfileTabs from "./ProfileTabs";
+
+import auth from './../auth/auth-helper';
+import { read } from './api-user.js';
+import { listByUser } from "../post/api-post";
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({
@@ -47,6 +49,7 @@ export default function Profile({ match }) {
         following: false
     });
     const [user, setUser] = useState({});
+    const [posts, setPosts] = useState([])
     const [redirectToSignin, setRedirectToSignin] = useState(false);
     const jwt = auth.isAuthenticated();
 
@@ -71,7 +74,9 @@ export default function Profile({ match }) {
                         ...values,
                         user: data,
                         following
-                    })
+                    });
+
+                    loadPosts(data._id);
                 }
             });
 
@@ -83,6 +88,20 @@ export default function Profile({ match }) {
 
     const checkFollow = user => {
         return user.followers.some(follower => follower._id == jwt.user._id);
+    };
+
+    const loadPosts = user => {
+        listByUser(
+            { userId: user },
+            { t: jwt.token }
+            ).then(data => {
+                console.log(data)
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                setPosts(data);
+            }
+        })
     };
 
     const clickFollowButton = callApi => {

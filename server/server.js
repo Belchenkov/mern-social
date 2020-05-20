@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 // Routes
 import userRoutes from './routes/user.routes';
 import authRoutes from './routes/auth.routes';
+import postRoutes from './routes/post.routes';
 
 // Connection URL
 mongoose.Promise = global.Promise;
@@ -23,6 +24,7 @@ mongoose.connect(config.mongoUri,  {
 
             app.use('/', userRoutes);
             app.use('/', authRoutes);
+            app.use('/', postRoutes);
 
             app.use((err, req, res, next) => {
                 if (err.name === 'UnauthorizedError') {
