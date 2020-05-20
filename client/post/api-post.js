@@ -48,8 +48,26 @@ const create = async (params, credentials, post) => {
     }
 };
 
+const like = async (params, credentials, postId) => {
+    try {
+        const response = await fetch('/api/posts/like/', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: JSON.stringify({userId:params.userId, postId})
+        });
+        return await response.json();
+    } catch(err) {
+        console.log(err);
+    }
+}
+
 export {
     listNewsFeed,
     listByUser,
-    create
+    create,
+    like
 }
