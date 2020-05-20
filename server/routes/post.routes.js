@@ -14,6 +14,8 @@ router.route('/api/posts/by/:userId')
     .get(authCtrl.requireSignin, postCtrl.listByUser);
 router.route('/api/posts/new/:userId')
     .post(authCtrl.requireSignin, postCtrl.create);
+router.route('/api/posts/:postId')
+    .delete(authCtrl.requireSignin, postCtrl.isPoster, postCtrl.remove);
 
 router.param('userId', userCtrl.userByID);
 router.param('postId', postCtrl.postByID);
