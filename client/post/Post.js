@@ -54,9 +54,11 @@ const useStyles = makeStyles(theme => ({
 export default function Post ({ post, onRemove }){
     const classes = useStyles();
     const jwt = auth.isAuthenticated();
+
     const checkLike = likes => {
         return likes.indexOf(jwt.user._id) !== -1;
     }
+
     const [values, setValues] = useState({
         like: checkLike(post.likes),
         likes: post.likes.length,
@@ -68,7 +70,8 @@ export default function Post ({ post, onRemove }){
     // }, [])
 
     const clickLike = () => {
-        let callApi = values.like ? unlike : like;
+        const callApi = values.like ? unlike : like;
+
         callApi(
             {userId: jwt.user._id},
             {t: jwt.token},
