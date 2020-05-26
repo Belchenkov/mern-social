@@ -18,6 +18,8 @@ router.route('/api/posts/:postId')
     .delete(authCtrl.requireSignin, postCtrl.isPoster, postCtrl.remove);
 router.route('/api/posts/like')
     .put(authCtrl.requireSignin, postCtrl.like);
+router.route('/api/posts/unlike')
+    .put(authCtrl.requireSignin, postCtrl.unlike);
 
 router.param('userId', userCtrl.userByID);
 router.param('postId', postCtrl.postByID);
