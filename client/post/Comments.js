@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function Comments ({ updateComments }) {
+export default function Comments ({ updateComments, comments }) {
     const classes = useStyles();
     const [text, setText] = useState('');
     const jwt = auth.isAuthenticated();
@@ -67,6 +67,24 @@ export default function Comments ({ updateComments }) {
         }
     }
 
+    const commentBody = item => {
+        return (
+            <p className={classes.commentText}>
+                <Link to={"/user/" + item.postedBy._id}>
+                    {item.postedBy.name}
+                </Link><br/>
+                { item.text }
+                <span className={classes.commentDate}>
+                    {
+                        (new Date(item.created)).toDateString()} |
+                        {auth.isAuthenticated().user._id === item.postedBy._id &&
+                        <Icon onClick={deleteComment(item)} className={classes.commentDelete}>delete</Icon>
+                    }
+                </span>
+            </p>
+        )
+    }
+
     return (<div>
         <CardHeader
             avatar={
@@ -88,6 +106,22 @@ export default function Comments ({ updateComments }) {
             }
             className={classes.cardHeader}
         />
+        {
+            comments.map((item, i) => {
+                return (
+                    <CardHeader
+                        avatar={
+                            <Avatar
+                                className={classes.smallAvatar}
+                                src={'/api/users/photo/'+item.postedBy._id}
+                            />
+                        }
+                        title={commentBody(item)}
+                        className={classes.cardHeader}
+                        key={i}
+                    />
+                );
+            })
         }
     </div>)
 }
