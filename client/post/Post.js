@@ -17,7 +17,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import Divider from '@material-ui/core/Divider';
 
 import { remove, like, unlike } from './api-post.js';
-//import Comments from './Comments';
+import Comments from './Comments';
 import auth from './../auth/auth-helper';
 
 const useStyles = makeStyles(theme => ({
@@ -90,7 +90,7 @@ export default function Post ({ post, onRemove }){
     }
 
     const updateComments = comments => {
-        setValues({...values, comments: comments});
+        setValues({...values, comments});
     }
 
     const deletePost = () => {
@@ -156,11 +156,11 @@ export default function Post ({ post, onRemove }){
                     aria-label="Comment"
                     color="secondary"
                 >
-                    <CommentIcon/>
+                    <CommentIcon />
                 </IconButton> <span>{values.comments.length}</span>
             </CardActions>
             <Divider/>
-            {/*<Comments postId={post._id} comments={values.comments} updateComments={updateComments}/>*/}
+            <Comments postId={post._id} comments={values.comments} updateComments={updateComments}/>
         </Card>
     )
 

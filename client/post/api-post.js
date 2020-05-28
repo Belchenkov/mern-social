@@ -99,11 +99,46 @@ const comment = async (params, credentials, postId, comment) => {
     }
 };
 
+const uncomment = async (params, credentials, postId, comment) => {
+    try {
+        let response = await fetch('/api/posts/uncomment/', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: JSON.stringify({userId: params.userId, postId, comment})
+        })
+        return await response.json();
+    } catch(err) {
+        console.log(err);
+    }
+};
+
+const remove = async (params, credentials) => {
+    try {
+        const response = await fetch('/api/posts/' + params.postId, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            }
+        })
+        return await response.json();
+    } catch(err) {
+        console.log(err);
+    }
+};
+
 export {
     listNewsFeed,
     listByUser,
     create,
     like,
+    remove,
     unlike,
-    comment
+    comment,
+    uncomment
 }
