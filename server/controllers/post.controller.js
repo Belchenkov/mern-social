@@ -180,7 +180,7 @@ const uncomment = async (params, credentials, postId, comment) => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + credentials.t
             },
-            body: JSON.stringify({userId:params.userId, postId, comment})
+            body: JSON.stringify({userId: params.userId, postId, comment})
         });
         return await response.json();
     } catch(err) {

@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function Comments ({ updateComments, comments }) {
+export default function Comments ({ updateComments, comments, postId }) {
     const classes = useStyles();
     const [text, setText] = useState('');
     const jwt = auth.isAuthenticated();
@@ -83,6 +83,21 @@ export default function Comments ({ updateComments, comments }) {
                 </span>
             </p>
         )
+    }
+
+    const deleteComment = comment => event => {
+        uncomment(
+            { userId: jwt.user._id },
+            { t: jwt.token },
+            postId,
+            comment
+        ).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                updateComments(data.comments);
+            }
+        })
     }
 
     return (<div>
