@@ -17,7 +17,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import Divider from '@material-ui/core/Divider';
 
 import { remove, like, unlike } from './api-post.js';
-//import Comments from './Comments';
+import Comments from './Comments';
 import auth from './../auth/auth-helper';
 
 const useStyles = makeStyles(theme => ({
@@ -54,9 +54,11 @@ const useStyles = makeStyles(theme => ({
 export default function Post ({ post, onRemove }){
     const classes = useStyles();
     const jwt = auth.isAuthenticated();
+
     const checkLike = likes => {
         return likes.indexOf(jwt.user._id) !== -1;
     }
+
     const [values, setValues] = useState({
         like: checkLike(post.likes),
         likes: post.likes.length,
@@ -68,7 +70,8 @@ export default function Post ({ post, onRemove }){
     // }, [])
 
     const clickLike = () => {
-        let callApi = values.like ? unlike : like;
+        const callApi = values.like ? unlike : like;
+
         callApi(
             {userId: jwt.user._id},
             {t: jwt.token},
@@ -87,7 +90,7 @@ export default function Post ({ post, onRemove }){
     }
 
     const updateComments = comments => {
-        setValues({...values, comments: comments});
+        setValues({...values, comments});
     }
 
     const deletePost = () => {
@@ -153,11 +156,11 @@ export default function Post ({ post, onRemove }){
                     aria-label="Comment"
                     color="secondary"
                 >
-                    <CommentIcon/>
+                    <CommentIcon />
                 </IconButton> <span>{values.comments.length}</span>
             </CardActions>
             <Divider/>
-            {/*<Comments postId={post._id} comments={values.comments} updateComments={updateComments}/>*/}
+            <Comments postId={post._id} comments={values.comments} updateComments={updateComments}/>
         </Card>
     )
 

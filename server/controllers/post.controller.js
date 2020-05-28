@@ -150,6 +150,44 @@ const unlike = async (req, res) => {
     }
 };
 
+const comment = async (req, res) => {
+    const comment = req.body.comment;
+
+    comment.postedBy = req.body.userId;
+
+    try {
+        const result = await Post.findByIdAndUpdate(
+            req.body.postId,
+            {$push: {comments: comment}},
+            {new: true})
+            .populate('comments.postedBy', '_id name')
+            .populate('postedBy', '_id name')
+            .exec();
+        res.json(result);
+    } catch(err) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
+        });
+    }
+};
+
+const uncomment = async (params, credentials, postId, comment) => {
+    try {
+        const response = await fetch('/api/posts/uncomment/', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: JSON.stringify({userId: params.userId, postId, comment})
+        });
+        return await response.json();
+    } catch(err) {
+        console.log(err);
+    }
+};
+
 export default {
     listNewsFeed,
     listByUser,
@@ -159,5 +197,7 @@ export default {
     isPoster,
     remove,
     like,
-    unlike
+    unlike,
+    comment,
+    uncomment
 }
